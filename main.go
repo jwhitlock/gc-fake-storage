@@ -71,13 +71,17 @@ func main() {
 	// }
 
 	loadedObjects := generateObjectsFromFiles()
+	externalURL := os.Getenv("GCS_FAKE_EXTERNAL_URL")
 
-	server, err := fakestorage.NewServerWithOptions(fakestorage.Options{
+	options := fakestorage.Options{
 		InitialObjects: loadedObjects,
 		Host:           "0.0.0.0",
 		Port:           4443,
 		StorageRoot:    "/storage",
-	})
+		ExternalURL:    externalURL,
+	}
+
+	server, err := fakestorage.NewServerWithOptions(options)
 	if err != nil {
 		panic(err)
 	}
