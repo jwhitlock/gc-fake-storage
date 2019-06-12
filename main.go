@@ -72,6 +72,7 @@ func main() {
 
 	loadedObjects := generateObjectsFromFiles()
 	externalURL := os.Getenv("GCS_FAKE_EXTERNAL_URL")
+	publicHost := os.Getenv("GCS_FAKE_PUBLIC_HOST")
 
 	options := fakestorage.Options{
 		InitialObjects: loadedObjects,
@@ -79,6 +80,7 @@ func main() {
 		Port:           4443,
 		StorageRoot:    "/storage",
 		ExternalURL:    externalURL,
+		PublicHost:     publicHost,
 	}
 
 	server, err := fakestorage.NewServerWithOptions(options)
@@ -86,5 +88,6 @@ func main() {
 		panic(err)
 	}
 	fmt.Printf("Server started at %s\n", server.URL())
+	fmt.Printf("Public host is %s\n", server.PublicURL())
 	select {}
 }

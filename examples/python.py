@@ -3,9 +3,11 @@ from google.auth.credentials import AnonymousCredentials
 import requests
 import urllib3
 
-BASE_URL = "https://127.0.0.1:4443"
+BASE_URL = "https://gcs.127.0.0.1.nip.io:4443"
+PUBLIC_URL = "https://storage.gcs.127.0.0.1.nip.io:4443"
 
 storage._http.Connection.API_BASE_URL = BASE_URL # override the BASE_URL in the client library with the mock server
+storage.blob._API_ACCESS_ENDPOINT = PUBLIC_URL
 storage.blob._DOWNLOAD_URL_TEMPLATE = (u"%s/download/storage/v1{path}?alt=media" % BASE_URL)
 storage.blob._BASE_UPLOAD_TEMPLATE = (u"%s/upload/storage/v1{bucket_path}/o?uploadType=" % BASE_URL)
 storage.blob._MULTIPART_URL_TEMPLATE = storage.blob._BASE_UPLOAD_TEMPLATE + u"multipart"
@@ -23,7 +25,7 @@ for bucket in client.list_buckets():
 
     # List the Blobs in each Bucket
     for blob in bucket.list_blobs():
-        print("Blob: %s" % blob.name)
+        print("Blob: %s at %s" % (blob.name, blob.public_url))
 
         # Print the content of the Blob
         b = bucket.get_blob(blob.name)
